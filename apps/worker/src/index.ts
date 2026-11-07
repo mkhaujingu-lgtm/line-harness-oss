@@ -4,6 +4,7 @@ import { LineClient } from '@line-crm/line-sdk';
 import { getLineAccounts } from '@line-crm/db';
 import { processStepDeliveries } from './services/step-delivery.js';
 import { processScheduledBroadcasts } from './services/broadcast.js';
+import { processOffHoursReplies } from './services/off-hours-reply.js';
 import { processReminderDeliveries } from './services/reminder-delivery.js';
 import { checkAccountHealth } from './services/ban-monitor.js';
 import { authMiddleware } from './middleware/auth.js';
@@ -44,6 +45,11 @@ export type Env = {
     LINE_LOGIN_CHANNEL_ID: string;
     LINE_LOGIN_CHANNEL_SECRET: string;
     WORKER_URL: string;
+    OFF_HOURS_REPLY_ENABLED?: string;
+    BUSINESS_HOURS?: string;
+    BUSINESS_CLOSED_DAYS?: string;
+    OFF_HOURS_REPLY_DELAY_MINUTES?: string;
+    OFF_HOURS_REPLY_MESSAGE?: string;
   };
 };
 
@@ -151,6 +157,7 @@ async function scheduled(
     );
   }
   jobs.push(checkAccountHealth(env.DB));
+  jobs.push(processOffHoursReplies(env.DB, env.LINE_CHANNEL_ACCESS_TOKEN, env));
 
   await Promise.allSettled(jobs);
 }

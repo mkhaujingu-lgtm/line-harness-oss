@@ -8,6 +8,12 @@ workers_dev = true
 
 [vars]
 WORKER_URL = "https://line-crm-worker.line-crm-api.workers.dev"
+# 時間外自動返信: 営業時間外の受信に1時間以上未返信なら自動返信
+OFF_HOURS_REPLY_ENABLED = "true"
+BUSINESS_HOURS = "9-18"            # JST 営業時間（開始-終了）
+BUSINESS_CLOSED_DAYS = ""          # 定休日 0=日..6=土（例 "0,3"）
+OFF_HOURS_REPLY_DELAY_MINUTES = "60"
+# OFF_HOURS_REPLY_MESSAGE = "..."  # 未設定なら既定文面（改行は \\n）
 
 [[d1_databases]]
 binding = "DB"
